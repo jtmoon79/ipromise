@@ -22,8 +22,9 @@ def overrides(interface_class):
                 f"{method.__name__} cannot be decorated both overridable and "
                 "overrides")
         if method.__name__ not in vars(interface_class):
-            raise TypeError(
-                f"{method.__name__} not found in interface class "
+            raise NotImplementedError(
+                f"Function {method.__name__} is an @overrides but that "
+                f"function is not implemented in interface class "
                 f"{interface_class.__name__}")
         def func():
             pass

@@ -79,7 +79,7 @@ def test_already_implemented():
 # Tests from overrides.py.
 # -----------------------------------------------------------------------------
 def test_not_found():
-    with pytest.raises(TypeError):
+    with pytest.raises(NotImplementedError):
         # Not found in interface class.
         class V(B):
             @overrides(B)
