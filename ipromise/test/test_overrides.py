@@ -37,6 +37,21 @@ class E(B):
         return 1
 
 
+class F(AbstractBaseClass):
+    @abstractmethod
+    @overridable
+    def f(self):
+        raise NotImplementedError
+
+
+class G(AbstractBaseClass):
+    f = None
+
+
+class H(AbstractBaseClass):
+    pass
+
+
 # Tests from ipromise.py.
 # -----------------------------------------------------------------------------
 def test_not_a_base_class():
@@ -101,3 +116,49 @@ def test_overridable_despite_base_class():
             @overridable
             def f(self):
                 return 1
+
+
+def test_cannot_instantiate_abstract_class():
+    with pytest.raises(TypeError):
+        F()  # TypeError … Can't instantiate abstract class …
+
+
+def test_overrides():
+    class F1(F):
+        @overrides(F)
+        def f(self):
+            pass
+    F1()
+
+
+def test_implements():
+    class F2(F):
+        @implements(F)
+        def f(self):
+            pass
+    F2()
+
+
+def test_implements_overrides():
+    class F3(F):
+        @implements(F)
+        @overrides(F)
+        def f(self):
+            pass
+    F3()
+
+
+def test_overrides_NotImplementedError_expected_type_function():
+    with pytest.raises(NotImplementedError):
+        class G1(G):
+            @overrides(G)  # NotImplementedError … expected implemented type …
+            def f(self):
+                pass
+
+
+def test_overrides_NotImplementedError_not_implemented():
+    with pytest.raises(NotImplementedError):
+        class H1(H):
+            @overrides(H)  # NotImplementedError … not implemented …
+            def f(self):
+                pass
